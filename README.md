@@ -31,7 +31,7 @@ Enable the globals listener in your PHPUnit configuration:
     <!-- ... -->
 
     <listeners>
-        <listener class="Zalas\PHPUnit\Globals\AnnotationsListener" />
+        <listener class="Zalas\PHPUnit\Globals\AnnotationListener" />
     </listeners>
 
 </phpunit>
@@ -42,6 +42,9 @@ Global variables can now be defined in annotations:
 ```php
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @env FOO=bar
+ */
 class ExampleTest extends TestCase
 {
     /**
@@ -52,6 +55,7 @@ class ExampleTest extends TestCase
      */
     public function test_global_variables()
     {
+        $this->assertSame('bar', $_ENV['FOO']);
         $this->assertSame('foo', $_ENV['APP_ENV']);
         $this->assertSame('0', $_ENV['APP_DEBUG']);
         $this->assertSame('bar', $_SERVER['APP_ENV']);
