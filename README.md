@@ -2,6 +2,8 @@
 
 Allows to use annotations to define global variables in PHPUnit test cases.
 
+[![Build Status](https://travis-ci.org/jakzal/phpunit-globals.svg?branch=master)](https://travis-ci.org/jakzal/phpunit-globals)
+
 Supported annotations:
 
  * `@env` for `$_ENV`
