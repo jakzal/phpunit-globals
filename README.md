@@ -1,6 +1,6 @@
 # PHPUnit Globals
 
-Allows to use annotations to define global variables for PHPUnit test cases.
+Allows to use annotations to define global variables in PHPUnit test cases.
 
 Supported annotations:
 
