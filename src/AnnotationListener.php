@@ -24,7 +24,7 @@ class AnnotationListener implements TestListener
         }
     }
 
-    public function endTest(Test $test, $time): void
+    public function endTest(Test $test, float $time): void
     {
         $this->restoreGlobals();
     }
