@@ -1,0 +1,25 @@
+{
+    "name": "zalas/phpunit-globals",
+    "description": "Allows to use annotations to define global variables for PHPUnit test cases.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jakub Zalas",
+            "email": "jakub@zalas.pl"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "^6.4 || ^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Zalas\\PHPUnit\\Globals\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Zalas\\PHPUnit\\Globals\\Tests\\": "tests/"
+        }
+    }
+}
