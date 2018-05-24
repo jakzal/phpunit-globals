@@ -39,6 +39,8 @@ Enable the globals listener in your PHPUnit configuration:
 </phpunit>
 ```
 
+Make sure the `AnnotationListener` is registered before any other listeners that might depend on global variables.
+
 Global variables can now be defined in annotations:
 
 ```php
