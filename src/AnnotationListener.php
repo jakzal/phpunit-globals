@@ -55,9 +55,9 @@ class AnnotationListener implements TestListener
 
     private function parseGlobalAnnotations(TestCase $test): array
     {
-        return array_map(function (array $annotations) {
-            return array_reduce($annotations, function ($carry, $annotation) {
-                list($name, $value) = strpos($annotation, '=') ? explode('=', $annotation, 2) : [$annotation, ''];
+        return \array_map(function (array $annotations) {
+            return \array_reduce($annotations, function ($carry, $annotation) {
+                list($name, $value) = \strpos($annotation, '=') ? \explode('=', $annotation, 2) : [$annotation, ''];
                 $carry[$name] = $value;
 
                 return $carry;
@@ -69,10 +69,10 @@ class AnnotationListener implements TestListener
     {
         $annotations = $test->getAnnotations();
 
-        return array_filter(
-            array_merge_recursive(['env' => [], 'server' => []], $annotations['class'], $annotations['method']),
+        return \array_filter(
+            \array_merge_recursive(['env' => [], 'server' => []], $annotations['class'], $annotations['method']),
             function (string $annotationName) {
-                return in_array($annotationName, ['env', 'server']);
+                return \in_array($annotationName, ['env', 'server']);
             },
             ARRAY_FILTER_USE_KEY
         );
