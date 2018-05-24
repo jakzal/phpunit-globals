@@ -9,7 +9,7 @@ matrix:
 
 before_script:
   - phpenv config-rm xdebug.ini
-  - if [[ $deps = low ]]; then composer update --prefer-lowest --prefer-stable; else composer install; fi
+  - if [[ $deps = low ]]; then make update-min; else make install; fi
 
 script:
-  - ./vendor/bin/phpunit
+  - if [[ $deps = low ]]; then make test-min; else make test; fi
