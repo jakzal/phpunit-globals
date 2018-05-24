@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Zalas\PHPUnit\Globals\Tests;
 
 use PHPUnit\Framework\Test;
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestListener;
 use Zalas\PHPUnit\Globals\AnnotationListener;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @env APP_ENV=test
