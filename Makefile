@@ -21,22 +21,24 @@ test: vendor cs phpunit
 test-min: update-min cs phpunit
 .PHONY: test-min
 
-cs: vendor/bin/php-cs-fixer
-	vendor/bin/php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi fix
+cs: tools/php-cs-fixer
+	tools/php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi fix
 .PHONY: cs
 
-cs-fix: vendor/bin/php-cs-fixer
-	vendor/bin/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
+cs-fix: tools/php-cs-fixer
+	tools/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
 .PHONY: cs-fix
 
-phpunit: vendor/bin/phpunit
-	vendor/bin/phpunit
+phpunit: tools/phpunit
+	tools/phpunit
 .PHONY: phpunit
 
 vendor: install
 
 vendor/bin/phpunit: install
 
-vendor/bin/php-cs-fixer:
-	curl -Ls http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o vendor/bin/php-cs-fixer && chmod +x vendor/bin/php-cs-fixer
+tools/phpunit: vendor/bin/phpunit
+	ln -sf ../vendor/bin/phpunit tools/phpunit
 
+tools/php-cs-fixer:
+	curl -Ls http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
