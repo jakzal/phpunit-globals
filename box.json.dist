@@ -1,0 +1,15 @@
+{
+    "base-path": "build/phar",
+    "output": "../zalas-phpunit-globals-extension.phar",
+    "compression": "GZ",
+    "directories": ["."],
+    "dump-autoload": true,
+    "exclude-composer-files": true,
+    "check-requirements": false,
+    "main": "vendor/autoload.php",
+    "banner": [
+        "This file is part of the zalas/phpunit-globals project.",
+        "",
+        "(c) Jakub Zalas <jakub@zalas.pl>"
+    ]
+}
