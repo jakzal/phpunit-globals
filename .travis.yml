@@ -1,15 +1,25 @@
 language: php
-
 matrix:
-    include:
-        - php: 7.1
-        - php: 7.2
-          env: deps=low
-    fast_finish: true
-
-before_script:
-  - phpenv config-rm xdebug.ini
-  - if [[ $deps = low ]]; then make update-min; else make install; fi
-
+  include:
+  - php: 7.1
+    env: EXECUTE_DEPLOYMENT=true
+  - php: 7.2
+    env: deps=low
+  fast_finish: true
+before_install:
+- phpenv config-rm xdebug.ini
+install:
+- if [[ $deps = low ]]; then make update-min; else make install; fi
 script:
-  - if [[ $deps = low ]]; then make test-min; else make test; fi
+- if [[ $deps = low ]]; then make test-min; else make test; fi
+- make package
+deploy:
+  provider: releases
+  api_key:
+    secure: bcQjAVuB0a/aMXFZ/dMeiiaipDDJQUmmwaHBMyRwZgTjd1m3ruz+D1vHUGCH8CBSEBf97aKh4mpzqllC0/DoKSZVUK8wf3elZv3Aw2q5RlmiXoigtNscBYxc9rCpqvoy1p8ituwQjKfEubRgAIBTpIiunEsbOfjV2jTHOpKUcz1+TiNCuS7JMbcnB0xIvKCz9EKvzbxIlrIaZ6erKRGwU2GqSnmchfimANyJZJbAYZD68BSetAWnCGhIunblr7c7abDBY72bphsJdAkAkaIvV8x8CABX52m+Uq5ceTVXvcltHWinht/lRehyvJH7TAJSi+arRGCKQPOGGvzKjH3Y7tkbm3KdR/gKQ5E0U1iK/7Dm3wp1AWQB3FGfRN20nccqIDpO/7MCwH0NE3eLGNLlMzVFuX9+iLz3a5i4Emnm2KY9YoLgHGvswyFcPUZrWbI0Q7unmyKQ3HPqUMpLaMU40Tt68KiG2+T4bPSjE8ZqdPpwFoE8OmNXLral/oOWueaMpSNpyatULaFt8rG0WLOG+LOSc6Ket2IU4mmQ3zo6a8zgnEIBatTxpzYnwiE21j0GzsNUIXVeHDQ3DVDANM5Lv3J3tiIEJVkJfvNC6T3WvT7FOITVhVUU9OLXBwAtrOesXmVlyAv+0IxLL48IIvmcp2hkIX7mVd8kCLFk8/T6Njg=
+  file: build/zalas-phpunit-globals-extension.phar
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: jakzal/phpunit-globals
+    condition: "$EXECUTE_DEPLOYMENT"
