@@ -8,6 +8,7 @@
          verbose="true">
     <testsuite name="default">
         <directory suffix="Test.php">tests</directory>
+        <exclude>tests/phar</exclude>
     </testsuite>
 
     <filter>
