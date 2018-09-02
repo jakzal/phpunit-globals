@@ -14,6 +14,7 @@ class AnnotationListener implements TestListener
 
     private $server;
     private $env;
+    private $getenv;
 
     public function startTest(Test $test): void
     {
@@ -33,12 +34,20 @@ class AnnotationListener implements TestListener
     {
         $this->server = $_SERVER;
         $this->env = $_ENV;
+        $this->getenv = \getenv();
     }
 
     private function restoreGlobals(): void
     {
         $_SERVER = $this->server;
         $_ENV = $this->env;
+
+        foreach (\array_diff_assoc($this->getenv, \getenv()) as $name => $value) {
+            \putenv(\sprintf('%s=%s', $name, $value));
+        }
+        foreach (\array_diff_assoc(\getenv(), $this->getenv) as $name => $value) {
+            \putenv($name);
+        }
     }
 
     private function readGlobalAnnotations(TestCase $test)
@@ -50,6 +59,9 @@ class AnnotationListener implements TestListener
         }
         foreach ($globalVars['server'] as $name => $value) {
             $_SERVER[$name] = $value;
+        }
+        foreach ($globalVars['putenv'] as $name => $value) {
+            \putenv(\sprintf('%s=%s', $name, $value));
         }
     }
 
@@ -70,9 +82,9 @@ class AnnotationListener implements TestListener
         $annotations = $test->getAnnotations();
 
         return \array_filter(
-            \array_merge_recursive(['env' => [], 'server' => []], $annotations['class'], $annotations['method']),
+            \array_merge_recursive(['env' => [], 'server' => [], 'putenv' => []], $annotations['class'], $annotations['method']),
             function (string $annotationName) {
-                return \in_array($annotationName, ['env', 'server']);
+                return \in_array($annotationName, ['env', 'server', 'putenv']);
             },
             ARRAY_FILTER_USE_KEY
         );
