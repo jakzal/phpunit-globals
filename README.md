@@ -8,9 +8,11 @@ Supported annotations:
 
  * `@env` for `$_ENV`
  * `@server` for `$_SERVER` 
+ * `@putenv` for [`putenv()`](http://php.net/putenv)
 
 Global variables are set before each test case is executed,
 and brought to the original state after each test case has finished.
+The same applies to `putenv()`/`getenv()` calls.
 
 ## Installation
 
@@ -73,6 +75,7 @@ class ExampleTest extends TestCase
      * @env APP_DEBUG=0
      * @server APP_ENV=bar
      * @server APP_DEBUG=1
+     * @putenv APP_HOST=localhost
      */
     public function test_global_variables()
     {
@@ -81,6 +84,7 @@ class ExampleTest extends TestCase
         $this->assertSame('0', $_ENV['APP_DEBUG']);
         $this->assertSame('bar', $_SERVER['APP_ENV']);
         $this->assertSame('1', $_SERVER['APP_DEBUG']);
+        $this->assertSame('localhost', \getenv('APP_HOST'));
     }
 }
 ```
