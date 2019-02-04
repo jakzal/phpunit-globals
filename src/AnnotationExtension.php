@@ -3,29 +3,23 @@ declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals;
 
-use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestListener;
-use PHPUnit\Framework\TestListenerDefaultImplementation;
+use PHPUnit\Runner\AfterTestHook;
+use PHPUnit\Runner\BeforeTestHook;
+use PHPUnit\Util\Test;
 
-class AnnotationListener implements TestListener
+class AnnotationExtension implements BeforeTestHook, AfterTestHook
 {
-    use TestListenerDefaultImplementation;
-
     private $server;
     private $env;
     private $getenv;
 
-    public function startTest(Test $test): void
+    public function executeBeforeTest(string $test): void
     {
         $this->backupGlobals();
-
-        if ($test instanceof TestCase) {
-            $this->readGlobalAnnotations($test);
-        }
+        $this->readGlobalAnnotations($test);
     }
 
-    public function endTest(Test $test, float $time): void
+    public function executeAfterTest(string $test, float $time): void
     {
         $this->restoreGlobals();
     }
@@ -50,7 +44,7 @@ class AnnotationListener implements TestListener
         }
     }
 
-    private function readGlobalAnnotations(TestCase $test)
+    private function readGlobalAnnotations(string $test)
     {
         $globalVars = $this->parseGlobalAnnotations($test);
 
@@ -65,7 +59,7 @@ class AnnotationListener implements TestListener
         }
     }
 
-    private function parseGlobalAnnotations(TestCase $test): array
+    private function parseGlobalAnnotations(string $test): array
     {
         return \array_map(function (array $annotations) {
             return \array_reduce($annotations, function ($carry, $annotation) {
@@ -77,9 +71,9 @@ class AnnotationListener implements TestListener
         }, $this->findGlobalVarAnnotations($test));
     }
 
-    private function findGlobalVarAnnotations(TestCase $test): array
+    private function findGlobalVarAnnotations(string $test): array
     {
-        $annotations = $test->getAnnotations();
+        $annotations = $this->parseTestMethodAnnotations($test);
 
         return \array_filter(
             \array_merge_recursive(['env' => [], 'server' => [], 'putenv' => []], $annotations['class'], $annotations['method']),
@@ -88,5 +82,11 @@ class AnnotationListener implements TestListener
             },
             ARRAY_FILTER_USE_KEY
         );
+    }
+
+    private function parseTestMethodAnnotations(string $test): array
+    {
+        // @see PHPUnit\Framework\TestCase::getAnnotations
+        return Test::parseTestMethodAnnotations(...\explode('::', $test));
     }
 }

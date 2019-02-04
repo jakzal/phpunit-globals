@@ -39,7 +39,7 @@ Remember to instruct PHPUnit to load extensions in your `phpunit.xml`:
 
 ## Usage
 
-Enable the globals listener in your PHPUnit configuration:
+Enable the globals annotation extension in your PHPUnit configuration:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -51,14 +51,14 @@ Enable the globals listener in your PHPUnit configuration:
 
     <!-- ... -->
 
-    <listeners>
-        <listener class="Zalas\PHPUnit\Globals\AnnotationListener" />
-    </listeners>
+    <extensions>
+        <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+    </extensions>
 
 </phpunit>
 ```
 
-Make sure the `AnnotationListener` is registered before any other listeners that might depend on global variables.
+Make sure the `AnnotationExtension` is registered before any other extensions that might depend on global variables.
 
 Global variables can now be defined in annotations:
 
@@ -87,6 +87,25 @@ class ExampleTest extends TestCase
         $this->assertSame('localhost', \getenv('APP_HOST'));
     }
 }
+```
+
+## Updating to PHPUnit 8
+
+When updating from a previous version of this extension that used to work with PHPUnit older than v8,
+replace the listener registration in `phpunit.xml`:
+
+```xml
+    <listeners>
+        <listener class="Zalas\PHPUnit\Globals\AnnotationListener" />
+    </listeners>
+```
+
+with the extension registration:
+
+```xml
+    <extensions>
+        <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+    </extensions>
 ```
 
 ## Contributing

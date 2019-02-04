@@ -3,21 +3,22 @@ declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals\Tests;
 
-use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\TestListener;
-use Zalas\PHPUnit\Globals\AnnotationListener;
+use PHPUnit\Runner\AfterTestHook;
+use PHPUnit\Runner\BeforeTestHook;
+use Zalas\PHPUnit\Globals\AnnotationExtension;
 
 /**
  * @env APP_ENV=test
  * @server APP_DEBUG=0
  * @putenv APP_HOST=localhost
  */
-class AnnotationListenerTest extends TestCase
+class AnnotationExtensionTest extends TestCase
 {
-    public function test_it_is_a_test_listener()
+    public function test_it_is_a_test_hook()
     {
-        $this->assertInstanceOf(TestListener::class, new AnnotationListener());
+        $this->assertInstanceOf(BeforeTestHook::class, new AnnotationExtension());
+        $this->assertInstanceOf(AfterTestHook::class, new AnnotationExtension());
     }
 
     /**
@@ -106,18 +107,6 @@ class AnnotationListenerTest extends TestCase
         $this->assertFalse(\getenv('FOO'), 'It removes environment variables initialised in a test.');
         $this->assertNotSame('foobar', \getenv('USER'), 'It restores environment variables changed in a test.');
         $this->assertNotFalse(\getenv('USER'), 'It restores environment variables changed in a test.');
-    }
-
-    public function test_it_ignores_non_standard_test_cases()
-    {
-        $test = $this->prophesize(Test::class)->reveal();
-
-        $listener = new AnnotationListener();
-
-        // Our implementation only supports TestCase, not just any Test.
-        $result = $listener->startTest($test);
-
-        $this->assertEmpty($result);
     }
 
     /**

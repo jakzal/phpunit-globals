@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * A test case with no global variable annotations.
  */
-class AnnotationListenerNoAnnotationsTest extends TestCase
+class AnnotationExtensionNoAnnotationsTest extends TestCase
 {
     public function test_it_backups_the_state()
     {
