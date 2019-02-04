@@ -119,4 +119,14 @@ class AnnotationListenerTest extends TestCase
 
         $this->assertEmpty($result);
     }
+
+    /**
+     * Provides a replacement for the assertion deprecated in PHPUnit 8 and removed in PHPUnit 9.
+     * @param array $subset
+     * @param array $array
+     */
+    public static function assertArraySubset($subset, $array, bool $checkForObjectIdentity = false, string $message = ''): void
+    {
+        self::assertSame($array, \array_replace_recursive($array, $subset));
+    }
 }
