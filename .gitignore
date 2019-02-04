@@ -1,5 +1,7 @@
 /.php_cs.cache
+/.phpunit.result.cache
 /box.json
 /build/
 /composer.lock
+/tests/phar/.phpunit.result.cache
 /vendor/
