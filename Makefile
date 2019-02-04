@@ -57,7 +57,7 @@ package: tools/box
 
 	cd build/phar && \
 	  composer remove phpunit/phpunit --no-update && \
-	  composer config platform.php 7.1 && \
+	  composer config platform.php 7.2 && \
 	  composer update --no-dev -o -a
 
 	tools/box compile
@@ -85,7 +85,7 @@ test-package-tools: tests/phar/tools/phpunit tests/phar/tools/phpunit.d/zalas-ph
 .PHONY: test-package-tools
 
 tests/phar/tools/phpunit:
-	curl -Ls https://phar.phpunit.de/phpunit-7.phar -o tests/phar/tools/phpunit && chmod +x tests/phar/tools/phpunit
+	curl -Ls https://phar.phpunit.de/phpunit-8.phar -o tests/phar/tools/phpunit && chmod +x tests/phar/tools/phpunit
 
 tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar: build/zalas-phpunit-globals-extension.phar
 	cp build/zalas-phpunit-globals-extension.phar tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
