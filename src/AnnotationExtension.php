@@ -76,7 +76,7 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         $annotations = $this->parseTestMethodAnnotations($test);
 
         return \array_filter(
-            \array_merge_recursive(['env' => [], 'server' => [], 'putenv' => []], $annotations['class'], $annotations['method']),
+            \array_merge_recursive(['env' => [], 'server' => [], 'putenv' => []], $annotations['class'], $annotations['method'] ?? []),
             function (string $annotationName) {
                 return \in_array($annotationName, ['env', 'server', 'putenv']);
             },
