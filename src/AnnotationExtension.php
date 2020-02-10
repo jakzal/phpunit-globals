@@ -87,6 +87,6 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
     private function parseTestMethodAnnotations(string $test): array
     {
         // @see PHPUnit\Framework\TestCase::getAnnotations
-        return Test::parseTestMethodAnnotations(...\preg_split('/ |\:\:/', $test));
+        return Test::parseTestMethodAnnotations(...\preg_split('/ |::/', $test));
     }
 }
