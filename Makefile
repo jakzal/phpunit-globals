@@ -25,7 +25,7 @@ test: vendor cs phpunit
 test-min: update-min cs phpunit
 .PHONY: test-min
 
-test-package: package test-package-tools
+test-package: test-package-tools
 	cd tests/phar && ./tools/phpunit
 .PHONY: test-package
 
@@ -48,7 +48,7 @@ clean:
 	find tests/phar/tools -not -path '*/\.*' -type f -delete
 .PHONY: clean
 
-package: tools/box
+build/zalas-phpunit-globals-extension.phar: tools/box
 	$(eval VERSION=$(shell git describe --abbrev=0 --tags 2> /dev/null | sed -e 's/^v//' || echo 'dev'))
 	@rm -rf build/phar && mkdir -p build/phar
 
@@ -63,6 +63,8 @@ package: tools/box
 	tools/box compile
 
 	@rm -rf build/phar
+
+package: build/zalas-phpunit-globals-extension.phar
 .PHONY: package
 
 vendor: install
@@ -89,5 +91,3 @@ tests/phar/tools/phpunit:
 
 tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar: build/zalas-phpunit-globals-extension.phar
 	cp build/zalas-phpunit-globals-extension.phar tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
-
-build/zalas-phpunit-globals-extension.phar: package
