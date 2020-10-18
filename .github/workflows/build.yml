@@ -76,9 +76,7 @@ jobs:
                     path: build/
 
             -   name: Test the phar
-                run: |
-                     make tests/phar/tools/phpunit tools/box && touch build/zalas-phpunit-globals-extension.phar && \
-                     make test-package
+                run: make -o tools/box test-package
 
     publish-phars:
         runs-on: ubuntu-latest
