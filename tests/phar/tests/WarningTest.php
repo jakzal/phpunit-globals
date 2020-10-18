@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class AnnotationExtensionWithWarningTest extends TestCase
+class WarningTest extends TestCase
 {
     /**
      * @dataProvider warning_producing_provider
