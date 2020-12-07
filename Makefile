@@ -97,7 +97,7 @@ test-package-tools: tests/phar/tools/phpunit tests/phar/tools/phpunit.d/zalas-ph
 .PHONY: test-package-tools
 
 tests/phar/tools/phpunit:
-	curl -Ls https://phar.phpunit.de/phpunit-9.phar -o tests/phar/tools/phpunit && chmod +x tests/phar/tools/phpunit
+	curl -Ls https://phar.phpunit.de/phpunit-9.4.4.phar -o tests/phar/tools/phpunit && chmod +x tests/phar/tools/phpunit
 
 tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar: build/zalas-phpunit-globals-extension.phar
 	cp build/zalas-phpunit-globals-extension.phar tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
