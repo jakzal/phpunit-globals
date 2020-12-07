@@ -1,3 +1,5 @@
+IS_PHP8:=$(shell php -r 'echo (int)version_compare(PHP_VERSION, "8.0", ">=");')
+
 default: build
 
 build: install test
@@ -29,12 +31,20 @@ test-package: test-package-tools
 	cd tests/phar && ./tools/phpunit
 .PHONY: test-package
 
+ifeq ($(IS_PHP8),1)
+cs:
+else
 cs: tools/php-cs-fixer
 	tools/php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi fix
+endif
 .PHONY: cs
 
+ifeq ($(IS_PHP8),1)
+cs-fix:
+else
 cs-fix: tools/php-cs-fixer
 	tools/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
+endif
 .PHONY: cs-fix
 
 phpunit: tools/phpunit
@@ -81,13 +91,13 @@ tools/php-cs-fixer:
 	curl -Ls http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
 
 tools/box:
-	curl -Ls https://github.com/humbug/box/releases/download/3.8.4/box.phar -o tools/box && chmod +x tools/box
+	curl -Ls https://github.com/humbug/box/releases/download/3.10.0/box.phar -o tools/box && chmod +x tools/box
 
 test-package-tools: tests/phar/tools/phpunit tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
 .PHONY: test-package-tools
 
 tests/phar/tools/phpunit:
-	curl -Ls https://phar.phpunit.de/phpunit-9.phar -o tests/phar/tools/phpunit && chmod +x tests/phar/tools/phpunit
+	curl -Ls https://phar.phpunit.de/phpunit-9.4.4.phar -o tests/phar/tools/phpunit && chmod +x tests/phar/tools/phpunit
 
 tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar: build/zalas-phpunit-globals-extension.phar
 	cp build/zalas-phpunit-globals-extension.phar tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
