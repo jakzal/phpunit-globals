@@ -1,3 +1,5 @@
+IS_PHP8:=$(shell php -r 'echo (int)version_compare(PHP_VERSION, "8.0", ">=");')
+
 default: build
 
 build: install test
@@ -29,12 +31,20 @@ test-package: test-package-tools
 	cd tests/phar && ./tools/phpunit
 .PHONY: test-package
 
+ifeq ($(IS_PHP8),1)
+cs:
+else
 cs: tools/php-cs-fixer
 	tools/php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi fix
+endif
 .PHONY: cs
 
+ifeq ($(IS_PHP8),1)
+cs-fix:
+else
 cs-fix: tools/php-cs-fixer
 	tools/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
+endif
 .PHONY: cs-fix
 
 phpunit: tools/phpunit
