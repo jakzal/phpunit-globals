@@ -88,7 +88,7 @@ tools/phpunit: vendor/bin/phpunit
 	ln -sf ../vendor/bin/phpunit tools/phpunit
 
 tools/php-cs-fixer:
-	curl -Ls http://cs.sensiolabs.org/download/php-cs-fixer-v2.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
+	curl -Ls http://cs.symfony.com/download/php-cs-fixer-v2.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
 
 tools/box:
 	curl -Ls https://github.com/humbug/box/releases/download/3.10.0/box.phar -o tools/box && chmod +x tools/box
