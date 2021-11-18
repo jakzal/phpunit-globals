@@ -15,7 +15,7 @@ jobs:
         name: Build and test
         strategy:
             matrix:
-                php: [7.3, 7.4, 8.0]
+                php: [7.3, 7.4, 8.0, 8.1]
                 deps: [high]
                 include:
                     -   php: 7.3
@@ -38,7 +38,7 @@ jobs:
 
                 # Separate package step until PHP 8.0 is supported
             -   name: Coding standards
-                if: matrix.php != '8.0'
+                if: matrix.php != '8.0' && matrix.php != '8.1'
                 run: make package
 
             -   name: Test & package (min)
@@ -58,7 +58,7 @@ jobs:
         needs: tests
         strategy:
             matrix:
-                php: [7.3, 7.4, 8.0]
+                php: [7.3, 7.4, 8.0, 8.1]
 
         steps:
             -   uses: actions/checkout@v2
