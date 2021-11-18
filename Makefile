@@ -1,4 +1,4 @@
-IS_PHP8:=$(shell php -r 'echo (int)version_compare(PHP_VERSION, "8.0", ">=");')
+IS_PHP81:=$(shell php -r 'echo (int)version_compare(PHP_VERSION, "8.1", ">=");')
 
 default: build
 
@@ -31,7 +31,7 @@ test-package: test-package-tools
 	cd tests/phar && ./tools/phpunit
 .PHONY: test-package
 
-ifeq ($(IS_PHP8),1)
+ifeq ($(IS_PHP81),1)
 cs:
 else
 cs: tools/php-cs-fixer
@@ -39,7 +39,7 @@ cs: tools/php-cs-fixer
 endif
 .PHONY: cs
 
-ifeq ($(IS_PHP8),1)
+ifeq ($(IS_PHP81),1)
 cs-fix:
 else
 cs-fix: tools/php-cs-fixer
