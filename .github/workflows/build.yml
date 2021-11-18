@@ -36,9 +36,7 @@ jobs:
                 if: matrix.deps == 'high'
                 run: make install test
 
-                # Separate package step until PHP 8.0 is supported
             -   name: Coding standards
-                if: matrix.php != '8.0' && matrix.php != '8.1'
                 run: make package
 
             -   name: Test & package (min)
