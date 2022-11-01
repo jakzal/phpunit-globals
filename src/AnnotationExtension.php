@@ -49,13 +49,25 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         $globalVars = $this->parseGlobalAnnotations($test);
 
         foreach ($globalVars['env'] as $name => $value) {
-            $_ENV[$name] = $value;
+            if (false === $value) {
+                unset($_ENV[$name]);
+            } else {
+                $_ENV[$name] = $value;
+            }
         }
         foreach ($globalVars['server'] as $name => $value) {
-            $_SERVER[$name] = $value;
+            if (false === $value) {
+                unset($_SERVER[$name]);
+            } else {
+                $_SERVER[$name] = $value;
+            }
         }
         foreach ($globalVars['putenv'] as $name => $value) {
-            \putenv(\sprintf('%s=%s', $name, $value));
+            if (false === $value) {
+                \putenv($name);
+            } else {
+                \putenv(\sprintf('%s=%s', $name, $value));
+            }
         }
     }
 
@@ -63,7 +75,7 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
     {
         return \array_map(function (array $annotations) {
             return \array_reduce($annotations, function ($carry, $annotation) {
-                list($name, $value) = \strpos($annotation, '=') ? \explode('=', $annotation, 2) : [$annotation, ''];
+                list($name, $value) = \strpos($annotation, '=') ? \explode('=', $annotation, 2) : [$annotation, false];
                 $carry[$name] = $value;
 
                 return $carry;
