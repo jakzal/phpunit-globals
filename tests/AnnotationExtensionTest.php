@@ -77,6 +77,18 @@ class AnnotationExtensionTest extends TestCase
      */
     public function test_it_reads_empty_vars()
     {
+        $this->assertArraySubset(['APP_ENV' => ''], $_ENV);
+        $this->assertArraySubset(['APP_DEBUG' => ''], $_SERVER);
+        $this->assertArraySubset(['APP_HOST' => ''], \getenv());
+    }
+
+    /**
+     * @unset-env APP_ENV
+     * @unset-server APP_DEBUG
+     * @unset-getenv APP_HOST
+     */
+    public function test_it_unsets_vars()
+    {
         $this->assertArrayNotHasKey('APP_ENV', $_ENV);
         $this->assertArrayNotHasKey('APP_DEBUG', $_SERVER);
         $this->assertArrayNotHasKey('APP_HOST', \getenv());

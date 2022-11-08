@@ -49,25 +49,25 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         $globalVars = $this->parseGlobalAnnotations($test);
 
         foreach ($globalVars['env'] as $name => $value) {
-            if (false === $value) {
-                unset($_ENV[$name]);
-            } else {
-                $_ENV[$name] = $value;
-            }
+            $_ENV[$name] = $value;
         }
         foreach ($globalVars['server'] as $name => $value) {
-            if (false === $value) {
-                unset($_SERVER[$name]);
-            } else {
-                $_SERVER[$name] = $value;
-            }
+            $_SERVER[$name] = $value;
         }
         foreach ($globalVars['putenv'] as $name => $value) {
-            if (false === $value) {
-                \putenv($name);
-            } else {
-                \putenv(\sprintf('%s=%s', $name, $value));
-            }
+            \putenv(\sprintf('%s=%s', $name, $value));
+        }
+
+        $unsetVars = $this->findUnsetVarAnnotations($test);
+
+        foreach ($unsetVars['unset-env'] as $name) {
+            unset($_ENV[$name]);
+        }
+        foreach ($unsetVars['unset-server'] as $name) {
+            unset($_SERVER[$name]);
+        }
+        foreach ($unsetVars['unset-getenv'] as $name) {
+            \putenv($name);
         }
     }
 
@@ -75,22 +75,43 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
     {
         return \array_map(function (array $annotations) {
             return \array_reduce($annotations, function ($carry, $annotation) {
-                list($name, $value) = \strpos($annotation, '=') ? \explode('=', $annotation, 2) : [$annotation, false];
+                list($name, $value) = \strpos($annotation, '=') ? \explode('=', $annotation, 2) : [$annotation, ''];
                 $carry[$name] = $value;
 
                 return $carry;
             }, []);
-        }, $this->findGlobalVarAnnotations($test));
+        }, $this->findSetVarAnnotations($test));
     }
 
-    private function findGlobalVarAnnotations(string $test): array
+    private function findSetVarAnnotations(string $test): array
     {
         $annotations = $this->parseTestMethodAnnotations($test);
 
         return \array_filter(
-            \array_merge_recursive(['env' => [], 'server' => [], 'putenv' => []], $annotations['class'] ?? [], $annotations['method'] ?? []),
+            \array_merge_recursive(
+                ['env' => [], 'server' => [], 'putenv' => []],
+                $annotations['class'] ?? [],
+                $annotations['method'] ?? []
+            ),
             function (string $annotationName) {
                 return \in_array($annotationName, ['env', 'server', 'putenv']);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+    }
+
+    private function findUnsetVarAnnotations(string $test): array
+    {
+        $annotations = $this->parseTestMethodAnnotations($test);
+
+        return \array_filter(
+            \array_merge_recursive(
+                ['unset-env' => [], 'unset-server' => [], 'unset-getenv' => []],
+                $annotations['class'] ?? [],
+                $annotations['method'] ?? []
+            ),
+            function (string $annotationName) {
+                return \in_array($annotationName, ['unset-env', 'unset-server', 'unset-getenv']);
             },
             ARRAY_FILTER_USE_KEY
         );
