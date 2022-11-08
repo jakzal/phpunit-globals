@@ -7,7 +7,7 @@ Allows to use annotations to define global variables in PHPUnit test cases.
 Supported annotations:
 
  * `@env` for `$_ENV`
- * `@server` for `$_SERVER` 
+ * `@server` for `$_SERVER`
  * `@putenv` for [`putenv()`](http://php.net/putenv)
 
 Global variables are set before each test case is executed,
@@ -85,6 +85,27 @@ class ExampleTest extends TestCase
         $this->assertSame('bar', $_SERVER['APP_ENV']);
         $this->assertSame('1', $_SERVER['APP_DEBUG']);
         $this->assertSame('localhost', \getenv('APP_HOST'));
+    }
+}
+```
+
+It's also possible to mark a variable as _unset_ so it will not be present in any of the global variables:
+
+```php
+use PHPUnit\Framework\TestCase;
+
+class ExampleTest extends TestCase
+{
+    /**
+     * @unset-env APP_ENV
+     * @unset-server APP_DEBUG
+     * @unset-getenv APP_HOST
+     */
+    public function test_global_variables()
+    {
+        $this->assertArrayNotHasKey('APP_ENV', $_ENV);
+        $this->assertArrayNotHasKey('APP_DEBUG', $_SERVER);
+        $this->assertArrayNotHasKey('APP_HOST', \getenv());
     }
 }
 ```
