@@ -1,4 +1,4 @@
-IS_PHP81:=$(shell php -r 'echo (int)version_compare(PHP_VERSION, "8.1", ">=");')
+IS_PHP73:=$(shell php -r 'echo (int)version_compare(PHP_VERSION, "7.4", "<");')
 
 default: build
 
@@ -31,7 +31,7 @@ test-package: test-package-tools
 	cd tests/phar && ./tools/phpunit
 .PHONY: test-package
 
-ifeq ($(IS_PHP81),1)
+ifeq ($(IS_PHP73),1)
 cs:
 else
 cs: tools/php-cs-fixer
@@ -39,7 +39,7 @@ cs: tools/php-cs-fixer
 endif
 .PHONY: cs
 
-ifeq ($(IS_PHP81),1)
+ifeq ($(IS_PHP73),1)
 cs-fix:
 else
 cs-fix: tools/php-cs-fixer
@@ -88,7 +88,7 @@ tools/phpunit: vendor/bin/phpunit
 	ln -sf ../vendor/bin/phpunit tools/phpunit
 
 tools/php-cs-fixer:
-	curl -Ls http://cs.symfony.com/download/php-cs-fixer-v2.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
+	curl -Ls http://cs.symfony.com/download/php-cs-fixer-v3.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
 
 tools/box:
 	curl -Ls https://github.com/humbug/box/releases/download/3.13.0/box.phar -o tools/box && chmod +x tools/box

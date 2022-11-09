@@ -57,6 +57,18 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         foreach ($globalVars['putenv'] as $name => $value) {
             \putenv(\sprintf('%s=%s', $name, $value));
         }
+
+        $unsetVars = $this->findUnsetVarAnnotations($test);
+
+        foreach ($unsetVars['unset-env'] as $name) {
+            unset($_ENV[$name]);
+        }
+        foreach ($unsetVars['unset-server'] as $name) {
+            unset($_SERVER[$name]);
+        }
+        foreach ($unsetVars['unset-getenv'] as $name) {
+            \putenv($name);
+        }
     }
 
     private function parseGlobalAnnotations(string $test): array
@@ -68,17 +80,38 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
 
                 return $carry;
             }, []);
-        }, $this->findGlobalVarAnnotations($test));
+        }, $this->findSetVarAnnotations($test));
     }
 
-    private function findGlobalVarAnnotations(string $test): array
+    private function findSetVarAnnotations(string $test): array
     {
         $annotations = $this->parseTestMethodAnnotations($test);
 
         return \array_filter(
-            \array_merge_recursive(['env' => [], 'server' => [], 'putenv' => []], $annotations['class'] ?? [], $annotations['method'] ?? []),
+            \array_merge_recursive(
+                ['env' => [], 'server' => [], 'putenv' => []],
+                $annotations['class'] ?? [],
+                $annotations['method'] ?? []
+            ),
             function (string $annotationName) {
                 return \in_array($annotationName, ['env', 'server', 'putenv']);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+    }
+
+    private function findUnsetVarAnnotations(string $test): array
+    {
+        $annotations = $this->parseTestMethodAnnotations($test);
+
+        return \array_filter(
+            \array_merge_recursive(
+                ['unset-env' => [], 'unset-server' => [], 'unset-getenv' => []],
+                $annotations['class'] ?? [],
+                $annotations['method'] ?? []
+            ),
+            function (string $annotationName) {
+                return \in_array($annotationName, ['unset-env', 'unset-server', 'unset-getenv']);
             },
             ARRAY_FILTER_USE_KEY
         );
