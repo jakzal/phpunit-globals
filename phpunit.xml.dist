@@ -9,6 +9,9 @@
     <directory suffix="Test.php">tests</directory>
     <exclude>tests/phar</exclude>
   </testsuite>
+  <php>
+    <env name="USER" value="test" force="true"/>
+  </php>
   <extensions>
     <extension class="Zalas\PHPUnit\Globals\AnnotationExtension"/>
   </extensions>
