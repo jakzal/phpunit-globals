@@ -35,7 +35,7 @@ ifeq ($(IS_PHP73),1)
 cs:
 else
 cs: tools/php-cs-fixer
-	tools/php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi fix
+	PHP_CS_FIXER_IGNORE_ENV=1 tools/php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi fix
 endif
 .PHONY: cs
 
@@ -43,7 +43,7 @@ ifeq ($(IS_PHP73),1)
 cs-fix:
 else
 cs-fix: tools/php-cs-fixer
-	tools/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
+	PHP_CS_FIXER_IGNORE_ENV=1 tools/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
 endif
 .PHONY: cs-fix
 
