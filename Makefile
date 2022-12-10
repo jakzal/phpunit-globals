@@ -1,5 +1,3 @@
-IS_PHP73:=$(shell php -r 'echo (int)version_compare(PHP_VERSION, "7.4", "<");')
-
 default: build
 
 build: install test
@@ -31,21 +29,11 @@ test-package: test-package-tools
 	cd tests/phar && ./tools/phpunit
 .PHONY: test-package
 
-ifeq ($(IS_PHP73),1)
-cs:
-else
 cs: tools/php-cs-fixer
 	PHP_CS_FIXER_IGNORE_ENV=1 tools/php-cs-fixer --dry-run --allow-risky=yes --no-interaction --ansi fix
-endif
-.PHONY: cs
 
-ifeq ($(IS_PHP73),1)
-cs-fix:
-else
 cs-fix: tools/php-cs-fixer
 	PHP_CS_FIXER_IGNORE_ENV=1 tools/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
-endif
-.PHONY: cs-fix
 
 phpunit: tools/phpunit
 	tools/phpunit
@@ -67,7 +55,7 @@ build/zalas-phpunit-globals-extension.phar: tools/box
 
 	cd build/phar && \
 	  composer remove phpunit/phpunit --no-update && \
-	  composer config platform.php 7.3 && \
+	  composer config platform.php 8.0 && \
 	  composer update --no-dev -o -a
 
 	tools/box compile
