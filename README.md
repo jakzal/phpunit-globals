@@ -31,7 +31,7 @@ Put the extension in your PHPUnit extensions directory.
 Remember to instruct PHPUnit to load extensions in your `phpunit.xml`:
 
 ```xml
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.0/phpunit.xsd"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://./vendor/phpunit/phpunit/phpunit.xsd"
          extensionsDirectory="tools/phpunit.d"
 >
 </phpunit>
@@ -44,15 +44,14 @@ Enable the globals annotation extension in your PHPUnit configuration:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.0/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="file://./vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
-         verbose="true"
          colors="true">
 
     <!-- ... -->
 
     <extensions>
-        <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+        <bootstrap class="Zalas\PHPUnit\Globals\AnnotationExtension" />
     </extensions>
 
 </phpunit>
@@ -109,23 +108,22 @@ class ExampleTest extends TestCase
     }
 }
 ```
+## Updating to PHPUnit 10
 
-## Updating to PHPUnit 8
-
-When updating from a previous version of this extension that used to work with PHPUnit older than v8,
-replace the listener registration in `phpunit.xml`:
-
-```xml
-    <listeners>
-        <listener class="Zalas\PHPUnit\Globals\AnnotationListener" />
-    </listeners>
-```
-
-with the extension registration:
+When updating from a previous version of this extension dedicated to work with PHPUnit 9,
+replace the extension registration in `phpunit.xml`:
 
 ```xml
     <extensions>
         <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+    </extensions>
+```
+
+with:
+
+```xml
+    <extensions>
+        <bootstrap class="Zalas\PHPUnit\Globals\AnnotationExtension" />
     </extensions>
 ```
 

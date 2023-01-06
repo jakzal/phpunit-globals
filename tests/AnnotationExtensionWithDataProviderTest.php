@@ -15,7 +15,7 @@ class AnnotationExtensionWithDataProviderTest extends TestCase
         $this->assertTrue(true, 'It lets the test cases run normally');
     }
 
-    public function provider()
+    public static function provider()
     {
         // This is just a dummy data provider
         yield [1];

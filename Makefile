@@ -35,8 +35,8 @@ cs: tools/php-cs-fixer
 cs-fix: tools/php-cs-fixer
 	PHP_CS_FIXER_IGNORE_ENV=1 tools/php-cs-fixer --allow-risky=yes --no-interaction --ansi fix
 
-phpunit: tools/phpunit
-	tools/phpunit
+phpunit: vendor
+	vendor/bin/phpunit
 .PHONY: phpunit
 
 clean:
@@ -55,7 +55,7 @@ build/zalas-phpunit-globals-extension.phar: tools/box
 
 	cd build/phar && \
 	  composer remove phpunit/phpunit --no-update && \
-	  composer config platform.php 8.0 && \
+	  composer config platform.php 8.1 && \
 	  composer update --no-dev -o -a
 
 	tools/box compile
@@ -69,23 +69,20 @@ vendor: install
 
 vendor/bin/phpunit: install
 
-tools: tools/php-cs-fixer tools/phpunit tools/box
+tools: tools/php-cs-fixer tools/box
 .PHONY: tools
-
-tools/phpunit: vendor/bin/phpunit
-	ln -sf ../vendor/bin/phpunit tools/phpunit
 
 tools/php-cs-fixer:
 	curl -Ls http://cs.symfony.com/download/php-cs-fixer-v3.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
 
 tools/box:
-	curl -Ls https://github.com/humbug/box/releases/download/3.13.0/box.phar -o tools/box && chmod +x tools/box
+	curl -Ls https://github.com/humbug/box/releases/download/4.2.0/box.phar -o tools/box && chmod +x tools/box
 
 test-package-tools: tests/phar/tools/phpunit tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
 .PHONY: test-package-tools
 
-tests/phar/tools/phpunit:
-	curl -Ls https://phar.phpunit.de/phpunit-9.5.10.phar -o tests/phar/tools/phpunit && chmod +x tests/phar/tools/phpunit
+tests/phar/tools/phpunit: vendor
+	ln -sf $(CURDIR)/vendor/bin/phpunit tests/phar/tools/phpunit
 
 tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar: build/zalas-phpunit-globals-extension.phar
 	cp build/zalas-phpunit-globals-extension.phar tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
