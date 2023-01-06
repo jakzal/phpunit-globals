@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace Zalas\PHPUnit\Globals\Tests;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Runner\AfterTestHook;
-use PHPUnit\Runner\BeforeTestHook;
-use Zalas\PHPUnit\Globals\AnnotationExtension;
 
 /**
  * @env APP_ENV=test
@@ -15,12 +12,6 @@ use Zalas\PHPUnit\Globals\AnnotationExtension;
  */
 class AnnotationExtensionTest extends TestCase
 {
-    public function test_it_is_a_test_hook()
-    {
-        $this->assertInstanceOf(BeforeTestHook::class, new AnnotationExtension());
-        $this->assertInstanceOf(AfterTestHook::class, new AnnotationExtension());
-    }
-
     /**
      * @env APP_ENV=test_foo
      * @server APP_DEBUG=1
@@ -86,9 +77,11 @@ class AnnotationExtensionTest extends TestCase
      * @unset-env APP_ENV
      * @unset-server APP_DEBUG
      * @unset-getenv APP_HOST
+     * @unset-env USER
      */
     public function test_it_unsets_vars()
     {
+        $this->assertArrayNotHasKey('USER', $_ENV);
         $this->assertArrayNotHasKey('APP_ENV', $_ENV);
         $this->assertArrayNotHasKey('APP_DEBUG', $_SERVER);
         $this->assertArrayNotHasKey('APP_HOST', \getenv());

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.0/phpunit.xsd"
+         xsi:noNamespaceSchemaLocation="file://./vendor/phpunit/phpunit/phpunit.xsd"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
-         verbose="true"
          extensionsDirectory="tools/phpunit.d">
     <testsuites>
         <testsuite name="default">
@@ -12,12 +11,6 @@
     </testsuites>
 
     <extensions>
-        <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+        <bootstrap class="Zalas\PHPUnit\Globals\AnnotationExtension" />
     </extensions>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
 </phpunit>
