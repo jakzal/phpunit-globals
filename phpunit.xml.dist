@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="vendor/autoload.php" beStrictAboutOutputDuringTests="true" beStrictAboutTodoAnnotatedTests="true" colors="true" verbose="true">
-  <coverage processUncoveredFiles="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="vendor/autoload.php" beStrictAboutOutputDuringTests="true" beStrictAboutTodoAnnotatedTests="true" colors="true" >
+  <coverage>
     <include>
       <directory suffix=".php">src</directory>
     </include>
@@ -13,6 +13,6 @@
     <env name="USER" value="test" force="true"/>
   </php>
   <extensions>
-    <extension class="Zalas\PHPUnit\Globals\AnnotationExtension"/>
+    <bootstrap class="Zalas\PHPUnit\Globals\Extension"/>
   </extensions>
 </phpunit>
