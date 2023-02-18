@@ -3,22 +3,24 @@ declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals\Tests;
 
+use PHPUnit\Event\Test\FinishedSubscriber;
+use PHPUnit\Event\Test\PreparationStartedSubscriber;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Runner\AfterTestHook;
-use PHPUnit\Runner\BeforeTestHook;
-use Zalas\PHPUnit\Globals\AnnotationExtension;
+use Zalas\PHPUnit\Globals\Context;
+use Zalas\PHPUnit\Globals\PrepareTestEnvironmentSubscriber;
+use Zalas\PHPUnit\Globals\RestoreEnvironmentGlobalsSubscriber;
 
 /**
  * @env APP_ENV=test
  * @server APP_DEBUG=0
  * @putenv APP_HOST=localhost
  */
-class AnnotationExtensionTest extends TestCase
+class ExtensionTest extends TestCase
 {
     public function test_it_is_a_test_hook()
     {
-        $this->assertInstanceOf(BeforeTestHook::class, new AnnotationExtension());
-        $this->assertInstanceOf(AfterTestHook::class, new AnnotationExtension());
+        $this->assertInstanceOf(PreparationStartedSubscriber::class, new PrepareTestEnvironmentSubscriber(new Context()));
+        $this->assertInstanceOf(FinishedSubscriber::class, new RestoreEnvironmentGlobalsSubscriber(new Context()));
     }
 
     /**

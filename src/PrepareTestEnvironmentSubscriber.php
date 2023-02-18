@@ -1,50 +1,30 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals;
 
-use PHPUnit\Runner\AfterTestHook;
-use PHPUnit\Runner\BeforeTestHook;
-use PHPUnit\Util\Test;
+use Exception;
+use PHPUnit\Event\Code\Test;
+use PHPUnit\Event\Test\PreparationStarted;
+use PHPUnit\Event\Test\PreparationStartedSubscriber;
+use PHPUnit\Metadata\Annotation\Parser\Registry;
 
-class AnnotationExtension implements BeforeTestHook, AfterTestHook
+final class PrepareTestEnvironmentSubscriber implements PreparationStartedSubscriber
 {
-    private $server;
-    private $env;
-    private $getenv;
-
-    public function executeBeforeTest(string $test): void
-    {
-        $this->backupGlobals();
-        $this->readGlobalAnnotations($test);
+    public function __construct(
+        private readonly Context $context,
+    ) {
     }
 
-    public function executeAfterTest(string $test, float $time): void
+    public function notify(PreparationStarted $event): void
     {
-        $this->restoreGlobals();
+        $this->context->backupGlobals();
+
+        $this->readGlobalAnnotations($event->test());
     }
 
-    private function backupGlobals(): void
-    {
-        $this->server = $_SERVER;
-        $this->env = $_ENV;
-        $this->getenv = \getenv();
-    }
-
-    private function restoreGlobals(): void
-    {
-        $_SERVER = $this->server;
-        $_ENV = $this->env;
-
-        foreach (\array_diff_assoc($this->getenv, \getenv()) as $name => $value) {
-            \putenv(\sprintf('%s=%s', $name, $value));
-        }
-        foreach (\array_diff_assoc(\getenv(), $this->getenv) as $name => $value) {
-            \putenv($name);
-        }
-    }
-
-    private function readGlobalAnnotations(string $test)
+    private function readGlobalAnnotations(Test $test): void
     {
         $globalVars = $this->parseGlobalAnnotations($test);
 
@@ -71,7 +51,7 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         }
     }
 
-    private function parseGlobalAnnotations(string $test): array
+    private function parseGlobalAnnotations(Test $test): array
     {
         return \array_map(function (array $annotations) {
             return \array_reduce($annotations, function ($carry, $annotation) {
@@ -83,7 +63,7 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         }, $this->findSetVarAnnotations($test));
     }
 
-    private function findSetVarAnnotations(string $test): array
+    private function findSetVarAnnotations(Test $test): array
     {
         $annotations = $this->parseTestMethodAnnotations($test);
 
@@ -100,7 +80,7 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         );
     }
 
-    private function findUnsetVarAnnotations(string $test): array
+    private function findUnsetVarAnnotations(Test $test): array
     {
         $annotations = $this->parseTestMethodAnnotations($test);
 
@@ -117,15 +97,33 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
         );
     }
 
-    private function parseTestMethodAnnotations(string $test): array
+    private function parseTestMethodAnnotations(Test $test): array
     {
-        $parts = \preg_split('/ |::/', $test);
+        $parts = \preg_split('/ |::/', $test->id());
 
         if (!\class_exists($parts[0])) {
             return [];
         }
 
-        // @see PHPUnit\Framework\TestCase::getAnnotations
-        return Test::parseTestMethodAnnotations(...$parts);
+        $className = $parts[0];
+        $methodName = $parts[1] ?? null;
+
+        $registry = Registry::getInstance();
+
+        if (null !== $methodName) {
+            try {
+                return [
+                    'method' => $registry->forMethod($className, $methodName)->symbolAnnotations(),
+                    'class'  => $registry->forClassName($className)->symbolAnnotations(),
+                ];
+            } catch (Exception $methodNotFound) {
+                // ignored
+            }
+        }
+
+        return [
+            'method' => null,
+            'class'  => $registry->forClassName($className)->symbolAnnotations(),
+        ];
     }
 }
