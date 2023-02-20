@@ -24,7 +24,6 @@
         }
     },
     "prefer-stable": true,
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-main": "3.x-dev"
