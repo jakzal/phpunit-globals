@@ -3,13 +3,13 @@
 namespace Zalas\PHPUnit\Globals;
 
 use PHPUnit\Event\Code\TestMethod;
-use PHPUnit\Event\Test\Prepared;
-use PHPUnit\Event\Test\PreparedSubscriber;
+use PHPUnit\Event\Test\PreparationStarted;
+use PHPUnit\Event\Test\PreparationStartedSubscriber;
 use PHPUnit\Metadata\Annotation\Parser\Registry;
 
-final class GlobalsAnnotationReader implements PreparedSubscriber
+final class GlobalsAnnotationReader implements PreparationStartedSubscriber
 {
-    public function notify(Prepared $event): void
+    public function notify(PreparationStarted $event): void
     {
         $this->readGlobalAnnotations($event->test());
     }

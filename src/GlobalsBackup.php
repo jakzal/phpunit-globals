@@ -2,16 +2,16 @@
 
 namespace Zalas\PHPUnit\Globals;
 
-use PHPUnit\Event\Test\Prepared;
-use PHPUnit\Event\Test\PreparedSubscriber;
+use PHPUnit\Event\Test\PreparationStarted;
+use PHPUnit\Event\Test\PreparationStartedSubscriber;
 
-final class GlobalsBackup implements PreparedSubscriber
+final class GlobalsBackup implements PreparationStartedSubscriber
 {
     private $server;
     private $env;
     private $getenv;
 
-    public function notify(Prepared $event): void
+    public function notify(PreparationStarted $event): void
     {
         $this->server = $_SERVER;
         $this->env = $_ENV;

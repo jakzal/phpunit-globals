@@ -6,12 +6,21 @@ namespace Zalas\PHPUnit\Globals\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * @env AVAILABLE_IN_SETUP=foo
  * @env APP_ENV=test
  * @server APP_DEBUG=0
  * @putenv APP_HOST=localhost
  */
 class AnnotationExtensionTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->assertArrayHasKey('AVAILABLE_IN_SETUP', $_ENV);
+        $this->assertSame('foo', $_ENV['AVAILABLE_IN_SETUP']);
+    }
+
     /**
      * @env APP_ENV=test_foo
      * @server APP_DEBUG=1
