@@ -6,9 +6,9 @@ namespace Zalas\PHPUnit\Globals\Tests;
 use PHPUnit\Framework\TestCase;
 
 /**
- * A test case with no global variable annotations.
+ * A test case with no global variable attributes.
  */
-class AnnotationExtensionNoAnnotationsTest extends TestCase
+class AttributeExtensionNoAttributesTest extends TestCase
 {
     public function test_it_backups_the_state()
     {

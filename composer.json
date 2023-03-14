@@ -1,6 +1,6 @@
 {
     "name": "zalas/phpunit-globals",
-    "description": "Allows to use annotations to define global variables in PHPUnit test cases.",
+    "description": "Allows to use attributes to define global variables in PHPUnit test cases.",
     "type": "library",
     "license": "MIT",
     "authors": [

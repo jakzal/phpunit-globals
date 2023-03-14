@@ -1,14 +1,19 @@
 # PHPUnit Globals
 
-Allows to use annotations to define global variables in PHPUnit test cases.
+Allows to use attributes to define global variables in PHPUnit test cases.
 
 [![Build](https://github.com/jakzal/phpunit-globals/actions/workflows/build.yml/badge.svg)](https://github.com/jakzal/phpunit-globals/actions/workflows/build.yml)
 
+Supported attributes:
+ * `#[Env]` for `$_ENV`
+ * `#[Server]` for `$_SERVER`
+ * `#[Putenv]` for [`putenv()`](http://php.net/putenv)
+
 Supported annotations:
 
- * `@env` for `$_ENV`
- * `@server` for `$_SERVER`
- * `@putenv` for [`putenv()`](http://php.net/putenv)
+ * `@env` and `@unset-env` for `$_ENV`
+ * `@server` and `@unset-server` for `$_SERVER`
+ * `@putenv` and `@unset-getenv` for [`putenv()`](http://php.net/putenv)
 
 Global variables are set before each test case is executed,
 and brought to the original state after each test case has finished.
@@ -39,7 +44,7 @@ Remember to instruct PHPUnit to load extensions in your `phpunit.xml`:
 
 ## Usage
 
-Enable the globals annotation extension in your PHPUnit configuration:
+Enable the globals attribute extension in your PHPUnit configuration:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -51,31 +56,33 @@ Enable the globals annotation extension in your PHPUnit configuration:
     <!-- ... -->
 
     <extensions>
-        <bootstrap class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+        <bootstrap class="Zalas\PHPUnit\Globals\AttributeExtension" />
     </extensions>
-
 </phpunit>
 ```
 
-Make sure the `AnnotationExtension` is registered before any other extensions that might depend on global variables.
+> If you are using a version before PHP 8.1 you can use the `AnnotationExtension` instead.
 
-Global variables can now be defined in annotations:
+Make sure the `AttributeExtension` is registered before any other extensions that might depend on global variables.
+
+Global variables can now be defined in attributes:
 
 ```php
 use PHPUnit\Framework\TestCase;
+use Zalas\PHPUnit\Globals\Attribute\Env;
+use Zalas\PHPUnit\Globals\Attribute\Server;
+use Zalas\PHPUnit\Globals\Attribute\Putenv;
 
 /**
  * @env FOO=bar
  */
 class ExampleTest extends TestCase
 {
-    /**
-     * @env APP_ENV=foo
-     * @env APP_DEBUG=0
-     * @server APP_ENV=bar
-     * @server APP_DEBUG=1
-     * @putenv APP_HOST=localhost
-     */
+    #[Env('APP_ENV', 'foo')]
+    #[Env('APP_DEBUG', '0')]
+    #[Server('APP_ENV', 'bar')]
+    #[Server('APP_DEBUG', '1')]
+    #[Putenv('APP_HOST', 'localhost')]
     public function test_global_variables()
     {
         $this->assertSame('bar', $_ENV['FOO']);
@@ -95,11 +102,9 @@ use PHPUnit\Framework\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * @unset-env APP_ENV
-     * @unset-server APP_DEBUG
-     * @unset-getenv APP_HOST
-     */
+    #[Env('APP_ENV', unset: true)]
+    #[Server('APP_DEBUG', unset: true)]
+    #[Putenv('APP_HOST', unset: true)]
     public function test_global_variables()
     {
         $this->assertArrayNotHasKey('APP_ENV', $_ENV);
@@ -115,7 +120,7 @@ replace the extension registration in `phpunit.xml`:
 
 ```xml
     <extensions>
-        <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+        <extension class="Zalas\PHPUnit\Globals\AttributeExtension" />
     </extensions>
 ```
 
@@ -123,7 +128,7 @@ with:
 
 ```xml
     <extensions>
-        <bootstrap class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+        <bootstrap class="Zalas\PHPUnit\Globals\AttributeExtension" />
     </extensions>
 ```
 
