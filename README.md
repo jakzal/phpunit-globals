@@ -1,6 +1,6 @@
 # PHPUnit Globals
 
-Allows to use annotations to define global variables in PHPUnit test cases.
+Allows to use attributes to define global variables in PHPUnit test cases.
 
 [![Build](https://github.com/jakzal/phpunit-globals/actions/workflows/build.yml/badge.svg)](https://github.com/jakzal/phpunit-globals/actions/workflows/build.yml)
 
