@@ -5,7 +5,7 @@ namespace Zalas\PHPUnit\Globals\Tests;
 
 use PHPUnit\Framework\TestCase;
 
-class AnnotationExtensionWithDataProviderTest extends TestCase
+class AttributeExtensionWithDataProviderTest extends TestCase
 {
     /**
      * @dataProvider provider
