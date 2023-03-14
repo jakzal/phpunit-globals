@@ -7,6 +7,9 @@ use PHPUnit\Event\Test\PreparationStarted;
 use PHPUnit\Event\Test\PreparationStartedSubscriber;
 use PHPUnit\Metadata\Annotation\Parser\Registry;
 
+/**
+ * @deprecated since 3.1.0, use Zalas\PHPUnit\Globals\GlobalsAttributeReader instead.
+ */
 final class GlobalsAnnotationReader implements PreparationStartedSubscriber
 {
     public function notify(PreparationStarted $event): void
