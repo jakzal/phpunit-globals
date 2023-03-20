@@ -9,6 +9,7 @@
 /box.json.dist export-ignore
 /composer.json export-ignore
 /manifest.xml.in export-ignore
+/.php-cs-fixer.php export-ignore
 /phpunit.xml.dist export-ignore
 /tests export-ignore
 /tools export-ignore
