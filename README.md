@@ -10,6 +10,12 @@ Supported annotations:
  * `@server` for `$_SERVER`
  * `@putenv` for [`putenv()`](http://php.net/putenv)
 
+Supported attributes:
+
+* `#[Env]` for `$_ENV`
+* `#[Server]` for `$_SERVER`
+* `#[Putenv]` for [`putenv()`](http://php.net/putenv)
+
 Global variables are set before each test case is executed,
 and brought to the original state after each test case has finished.
 The same applies to `putenv()`/`getenv()` calls.
@@ -52,13 +58,14 @@ Enable the globals annotation extension in your PHPUnit configuration:
     <!-- ... -->
 
     <extensions>
-        <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" />
+        <extension class="Zalas\PHPUnit\Globals\AnnotationExtension" /> <!-- if you want to use annotations -->
+        <extension class="Zalas\PHPUnit\Globals\AttributeExtension" /> <!-- if you want to use attributes -->
     </extensions>
 
 </phpunit>
 ```
 
-Make sure the `AnnotationExtension` is registered before any other extensions that might depend on global variables.
+Make sure the `AnnotationExtension` or `AttributeExtension` is registered before any other extensions that might depend on global variables.
 
 Global variables can now be defined in annotations:
 
@@ -77,6 +84,34 @@ class ExampleTest extends TestCase
      * @server APP_DEBUG=1
      * @putenv APP_HOST=localhost
      */
+    public function test_global_variables()
+    {
+        $this->assertSame('bar', $_ENV['FOO']);
+        $this->assertSame('foo', $_ENV['APP_ENV']);
+        $this->assertSame('0', $_ENV['APP_DEBUG']);
+        $this->assertSame('bar', $_SERVER['APP_ENV']);
+        $this->assertSame('1', $_SERVER['APP_DEBUG']);
+        $this->assertSame('localhost', \getenv('APP_HOST'));
+    }
+}
+```
+
+Global variables can also be defined with attributes:
+
+```php
+use PHPUnit\Framework\TestCase;
+use Zalas\PHPUnit\Globals\Attribute\Env;
+use Zalas\PHPUnit\Globals\Attribute\Server;
+use Zalas\PHPUnit\Globals\Attribute\Putenv;
+
+ #[Env('FOO=bar')]
+class ExampleTest extends TestCase
+{
+    #[Env('APP_ENV=foo')]
+    #[Env('APP_DEBUG=0')]
+    #[Server('APP_ENV=bar')]
+    #[Server('APP_DEBUG=1')]
+    #[Putenv('APP_HOST=localhost')]
     public function test_global_variables()
     {
         $this->assertSame('bar', $_ENV['FOO']);
