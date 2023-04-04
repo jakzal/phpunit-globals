@@ -14,5 +14,6 @@
   </php>
   <extensions>
     <extension class="Zalas\PHPUnit\Globals\AnnotationExtension"/>
+    <extension class="Zalas\PHPUnit\Globals\AttributeExtension"/>
   </extensions>
 </phpunit>
