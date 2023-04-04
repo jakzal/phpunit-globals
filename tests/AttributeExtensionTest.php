@@ -25,14 +25,14 @@ class AttributeExtensionTest extends TestCase
     #[Env('APP_ENV', 'test_foo')]
     #[Server('APP_DEBUG', '1')]
     #[Putenv('APP_HOST', 'dev')]
-    public function test_it_reads_global_variables_from_method_annotations()
+    public function test_it_reads_global_variables_from_method_attributes()
     {
         $this->assertArraySubset(['APP_ENV' => 'test_foo'], $_ENV);
         $this->assertArraySubset(['APP_DEBUG' => '1'], $_SERVER);
         $this->assertArraySubset(['APP_HOST' => 'dev'], \getenv());
     }
 
-    public function test_it_reads_global_variables_from_class_annotations()
+    public function test_it_reads_global_variables_from_class_attributes()
     {
         $this->assertArraySubset(['APP_ENV' => 'test'], $_ENV);
         $this->assertArraySubset(['APP_DEBUG' => '0'], $_SERVER);
