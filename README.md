@@ -37,7 +37,7 @@ The extension is also distributed as a PHAR, which can be downloaded from the mo
 [Github Release](https://github.com/jakzal/phpunit-globals/releases).
 
 Put the extension in your PHPUnit extensions directory.
-Remember to instruct PHPUnit to load extensions in your `phpunit.xml`:
+Remember to instruct PHPUnit to load extensions in your `phpunit.xml` using the `extensionsDirectory` attribute:
 
 ```xml
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file://./vendor/phpunit/phpunit/phpunit.xsd"
@@ -52,10 +52,7 @@ Enable the globals attribute extension in your PHPUnit configuration:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="file://./vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         colors="true">
+<phpunit ...>
 
     <!-- ... -->
 
@@ -67,7 +64,7 @@ Enable the globals attribute extension in your PHPUnit configuration:
 
 > If you are using a version before PHP 8.1 you can use the `AnnotationExtension` instead.
 
-Make sure the `AttributeExtension` is registered before any other extensions that might depend on global variables.
+Make sure the `AttributeExtension` is **registered before** any other extensions that might depend on global variables.
 
 Global variables can now be defined in attributes:
 
@@ -77,9 +74,7 @@ use Zalas\PHPUnit\Globals\Attribute\Env;
 use Zalas\PHPUnit\Globals\Attribute\Server;
 use Zalas\PHPUnit\Globals\Attribute\Putenv;
 
-/**
- * @env FOO=bar
- */
+ #[Env('FOO', 'bar')]
 class ExampleTest extends TestCase
 {
     #[Env('APP_ENV', 'foo')]
@@ -99,7 +94,7 @@ class ExampleTest extends TestCase
 }
 ```
 
-It's also possible to mark a variable as _unset_ so it will not be present in any of the global variables:
+It's also possible to mark an attribute with _unset_ so it will not be present in any of the global variables:
 
 ```php
 use PHPUnit\Framework\TestCase;
