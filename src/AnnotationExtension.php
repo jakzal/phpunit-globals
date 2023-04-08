@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals;
 
+use PHPUnit\Framework\TestCase;
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
 use PHPUnit\Util\Test;
@@ -121,7 +122,7 @@ class AnnotationExtension implements BeforeTestHook, AfterTestHook
     {
         $parts = \preg_split('/ |::/', $test);
 
-        if (!\class_exists($parts[0])) {
+        if (!\class_exists($parts[0]) || !\is_subclass_of($parts[0], TestCase::class)) {
             return [];
         }
 
