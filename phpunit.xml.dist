@@ -13,7 +13,6 @@
     <env name="USER" value="test" force="true"/>
   </php>
   <extensions>
-    <extension class="Zalas\PHPUnit\Globals\AnnotationExtension"/>
-    <extension class="Zalas\PHPUnit\Globals\AttributeExtension"/>
+    <extension class="Zalas\PHPUnit\Globals\Tests\Stub\CombinedExtension"/>
   </extensions>
 </phpunit>
