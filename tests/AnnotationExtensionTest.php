@@ -110,7 +110,7 @@ class AnnotationExtensionTest extends TestCase
     }
 
     /**
-     * @depends self::test_it_backups_the_state
+     * @depends test_it_backups_the_state
      */
     public function test_it_cleans_up_after_itself()
     {
