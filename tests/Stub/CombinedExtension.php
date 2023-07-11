@@ -12,7 +12,6 @@ use Zalas\PHPUnit\Globals\GlobalsContainer;
 
 final class CombinedExtension implements BeforeTestHook, AfterTestHook
 {
-
     public function executeBeforeTest(string $test): void
     {
         GlobalsContainer::getInstance()->backupGlobals();
