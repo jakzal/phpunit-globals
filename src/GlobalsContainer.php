@@ -8,6 +8,10 @@ final class GlobalsContainer
 {
     use SingletonTrait;
 
+    private array $server;
+    private array $env;
+    private array $getenv;
+
     private function __construct()
     {
     }
