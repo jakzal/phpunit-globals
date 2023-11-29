@@ -6,6 +6,7 @@ namespace Zalas\PHPUnit\Globals;
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\Test\PreparationStarted;
 use PHPUnit\Event\Test\PreparationStartedSubscriber;
+use PHPUnit\Framework\TestCase;
 use Zalas\PHPUnit\Globals\Attribute\Env;
 use Zalas\PHPUnit\Globals\Attribute\Putenv;
 use Zalas\PHPUnit\Globals\Attribute\Server;
@@ -81,26 +82,35 @@ final class GlobalsAttributeReader implements PreparationStartedSubscriber
         return $attributes;
     }
 
-    /**
-     * @return array<Env|Putenv|Server>
-     */
     private function parseTestMethodAttributes(TestMethod $method): array
     {
         $className = $method->className();
         $methodName = $method->methodName();
 
-        $methodAttributes = null;
+        $attributes = null;
 
         if (null !== $methodName) {
-            $methodAttributes = $this->collectGlobalsFromAttributes(
+            $attributes = $this->collectGlobalsFromAttributes(
                 (new \ReflectionMethod($className, $methodName))->getAttributes()
             );
         }
 
-        return \array_merge(
-            $methodAttributes,
+        $attributes = \array_merge(
+            $attributes,
             $this->collectGlobalsFromAttributes((new \ReflectionClass($className))->getAttributes())
         );
+
+        foreach (\class_parents($className) as $classParent) {
+            if ($classParent === TestCase::class) {
+                break;
+            }
+            $attributes = \array_merge(
+                $attributes,
+                $this->collectGlobalsFromAttributes((new \ReflectionClass($classParent))->getAttributes())
+            );
+        }
+
+        return $attributes;
     }
 
     /**
