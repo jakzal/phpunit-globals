@@ -55,7 +55,7 @@ build/zalas-phpunit-globals-extension.phar: tools/box
 
 	cd build/phar && \
 	  composer remove phpunit/phpunit --no-update && \
-	  composer config platform.php 8.0 && \
+	  composer config platform.php 8.1 && \
 	  composer update --no-dev -o -a
 
 	tools/box compile
@@ -79,7 +79,7 @@ tools/php-cs-fixer:
 	curl -Ls http://cs.symfony.com/download/php-cs-fixer-v3.phar -o tools/php-cs-fixer && chmod +x tools/php-cs-fixer
 
 tools/box:
-	curl -Ls https://github.com/humbug/box/releases/download/3.13.0/box.phar -o tools/box && chmod +x tools/box
+	curl -Ls https://github.com/humbug/box/releases/download/4.2.0/box.phar -o tools/box && chmod +x tools/box
 
 test-package-tools: tests/phar/tools/phpunit tests/phar/tools/phpunit.d/zalas-phpunit-globals-extension.phar
 .PHONY: test-package-tools
