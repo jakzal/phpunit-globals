@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals\Tests;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Zalas\PHPUnit\Globals\Attribute\Env;
 use Zalas\PHPUnit\Globals\Attribute\Putenv;
@@ -102,9 +103,7 @@ class AttributeExtensionTest extends TestCase
         $this->assertSame('foobar', \getenv('USER'));
     }
 
-    /**
-     * @depends test_it_backups_the_state
-     */
+    #[Depends('test_it_backups_the_state')]
     public function test_it_cleans_up_after_itself(): void
     {
         $this->assertArrayNotHasKey('FOO', $_ENV);
