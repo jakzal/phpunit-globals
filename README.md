@@ -15,9 +15,9 @@ Supported annotations:
  * `@server` and `@unset-server` for `$_SERVER`
  * `@putenv` and `@unset-getenv` for [`putenv()`](http://php.net/putenv)
 
-> Annotations are deprecated since v3.1.0 and will be removed in the next major or minor version (whichever comes first).
-> The latest annotation support is planned to be removed is when PHPUnit 11 is released.
-> Annotation support is complete, so if you plan on using them keep using v3.1 of this package.
+> Annotations are deprecated since v3.1.0 and will be removed in v3.4.0.
+> The latest annotation support is planned to be removed is when PHPUnit 12 is released.
+> Annotation support is complete, so if you plan on using them keep using v3.3 of this package.
 
 Global variables are set before each test case is executed,
 and brought to the original state after each test case has finished.
