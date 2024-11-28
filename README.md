@@ -74,7 +74,7 @@ use Zalas\PHPUnit\Globals\Attribute\Env;
 use Zalas\PHPUnit\Globals\Attribute\Server;
 use Zalas\PHPUnit\Globals\Attribute\Putenv;
 
- #[Env('FOO', 'bar')]
+#[Env('FOO', 'bar')]
 class ExampleTest extends TestCase
 {
     #[Env('APP_ENV', 'foo')]
