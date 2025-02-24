@@ -3,9 +3,15 @@ declare(strict_types=1);
 
 namespace Zalas\PHPUnit\Globals;
 
+use PHPUnit\Event\Code\Test;
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\Test\PreparationStarted;
 use PHPUnit\Event\Test\PreparationStartedSubscriber;
+use ReflectionAttribute;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use RuntimeException;
 use Zalas\PHPUnit\Globals\Attribute\Env;
 use Zalas\PHPUnit\Globals\Attribute\Putenv;
 use Zalas\PHPUnit\Globals\Attribute\Server;
@@ -17,7 +23,7 @@ final class GlobalsAttributeReader implements PreparationStartedSubscriber
         $this->readGlobalAttributes($event->test());
     }
 
-    private function readGlobalAttributes(TestMethod $method): void
+    private function readGlobalAttributes(Test $method): void
     {
         $attributes = $this->parseTestMethodAttributes($method);
         $setVars = $this->findSetVarAttributes($attributes);
@@ -84,27 +90,32 @@ final class GlobalsAttributeReader implements PreparationStartedSubscriber
     /**
      * @return array<Env|Putenv|Server>
      */
-    private function parseTestMethodAttributes(TestMethod $method): array
+    private function parseTestMethodAttributes(Test $method): array
     {
+        if (!$method instanceof TestMethod) {
+            return [];
+        }
+
         $className = $method->className();
         $methodName = $method->methodName();
 
-        $methodAttributes = null;
-
-        if (null !== $methodName) {
+        try {
             $methodAttributes = $this->collectGlobalsFromAttributes(
-                (new \ReflectionMethod($className, $methodName))->getAttributes()
+                (new ReflectionMethod($className, $methodName))->getAttributes()
             );
-        }
 
-        return \array_merge(
-            $methodAttributes,
-            $this->collectGlobalsFromAttributes((new \ReflectionClass($className))->getAttributes())
-        );
+            return \array_merge(
+                $methodAttributes,
+                $this->collectGlobalsFromAttributes((new ReflectionClass($className))->getAttributes())
+            );
+        } catch (ReflectionException $e) {
+            // There would need to be a bug in PHPUnit for the ReflectionException to be thrown.
+            throw new RuntimeException("Failed to parse test method $className::$methodName", 0, $e);
+        }
     }
 
     /**
-     * @param array<\ReflectionAttribute> $attributes
+     * @param array<ReflectionAttribute> $attributes
      * @return array<Env|Putenv|Server>
      */
     private function collectGlobalsFromAttributes(array $attributes): array

@@ -9,15 +9,8 @@ Supported attributes:
  * `#[Server]` for `$_SERVER`
  * `#[Putenv]` for [`putenv()`](http://php.net/putenv)
 
-Supported annotations:
-
- * `@env` and `@unset-env` for `$_ENV`
- * `@server` and `@unset-server` for `$_SERVER`
- * `@putenv` and `@unset-getenv` for [`putenv()`](http://php.net/putenv)
-
-> Annotations are deprecated since v3.1.0 and will be removed in v3.5.0.
-> The latest annotation support is planned to be removed is when PHPUnit 12 is released.
-> Annotation support is complete, so if you plan on using them keep using v3.4 of this package.
+> Annotations were previously supported up until v3.5.0 (inclusive).
+> Annotation support is complete, so if you plan on using them keep using v3.5 of this package.
 
 Global variables are set before each test case is executed,
 and brought to the original state after each test case has finished.
@@ -61,8 +54,6 @@ Enable the globals attribute extension in your PHPUnit configuration:
     </extensions>
 </phpunit>
 ```
-
-> If you are using a version before PHP 8.1 you can use the `AnnotationExtension` instead.
 
 Make sure the `AttributeExtension` is **registered before** any other extensions that might depend on global variables.
 
