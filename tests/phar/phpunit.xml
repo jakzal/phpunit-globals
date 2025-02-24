@@ -11,6 +11,6 @@
     </testsuites>
 
     <extensions>
-        <bootstrap class="Zalas\PHPUnit\Globals\Tests\Stub\CombinedExtension" />
+        <bootstrap class="Zalas\PHPUnit\Globals\AttributeExtension" />
     </extensions>
 </phpunit>
