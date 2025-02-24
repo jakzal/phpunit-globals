@@ -7,9 +7,9 @@ use PHPUnit\Event\Test\PreparationStartedSubscriber;
 
 final class GlobalsBackup implements PreparationStartedSubscriber
 {
-    private $server;
-    private $env;
-    private $getenv;
+    private array $server;
+    private array $env;
+    private array $getenv;
 
     public function notify(PreparationStarted $event): void
     {
