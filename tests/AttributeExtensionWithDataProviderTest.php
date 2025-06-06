@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class AttributeExtensionWithDataProviderTest extends TestCase
 {
     #[DataProvider('provider')]
-    public function test_it_handles_dataproviders()
+    public function test_it_handles_dataproviders(int $i)
     {
         $this->assertTrue(true, 'It lets the test cases run normally');
     }
