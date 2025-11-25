@@ -16,7 +16,7 @@ jobs:
         name: Build and test
         strategy:
             matrix:
-                php: [8.1, 8.2, 8.3, 8.4, 8.5]
+                php: [8.1, 8.2, 8.3, 8.4, 8.5, 8.6]
                 deps: [high]
                 include:
                     -   php: 8.1
@@ -33,11 +33,11 @@ jobs:
                     php-version: "${{ matrix.php }}"
                     ini-values: "phar.readonly=0"
 
-            -   name: Test & package
+            -   name: Test
                 if: matrix.deps == 'high'
                 run: make install test
 
-            -   name: Coding standards
+            -   name: Package
                 run: make package
 
             -   name: Test & package (min)
@@ -57,7 +57,7 @@ jobs:
         needs: tests
         strategy:
             matrix:
-                php: [8.1, 8.2, 8.3, 8.4, 8.5]
+                php: [8.1, 8.2, 8.3, 8.4, 8.5, 8.6]
         steps:
             -   uses: actions/checkout@v4
 
