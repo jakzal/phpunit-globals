@@ -33,11 +33,11 @@ jobs:
                     php-version: "${{ matrix.php }}"
                     ini-values: "phar.readonly=0"
 
-            -   name: Test & package
+            -   name: Test
                 if: matrix.deps == 'high'
                 run: make install test
 
-            -   name: Coding standards
+            -   name: Package
                 run: make package
 
             -   name: Test & package (min)
